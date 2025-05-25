@@ -212,6 +212,16 @@
 <script>
     $(document).ready(function () {
         loadevents();
+
+        $('#etable tbody').on('click','tr',function (){
+            //select karapu table row eke tiyena table details tika select karanawa
+            const tds = $(this).find('td');
+            $('#eventId').val(tds.eq(0).text());
+            $('#eventName').val(tds.eq(1).text());
+            $('#eventDescription').val(tds.eq(2).text());
+            $('#eventDate').val(tds.eq(3).text());
+            $('#eventPlace').val(tds.eq(4).text());
+        });
     });
 
     function loadevents() {
@@ -274,6 +284,11 @@
         });
     });
 
+    $('#clear-btn').click(function () {
+        $('#eventForm')[0].reset();
+        $('#eventId, #eventName, #eventDescription, #eventDate, #eventPlace').removeClass('is-invalid');
+        $('#eventId').focus();
+    });
 </script>
 </body>
 </html>
