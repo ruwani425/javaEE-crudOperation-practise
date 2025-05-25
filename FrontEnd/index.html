@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Page</title>
+
+    <style>
+        body {
+            background-image: url('/images/paper-surrounded-finance-element.jpg');
+            background-size: cover; /* Scale image to cover full screen */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent repeating */
+            background-attachment: fixed; /* Keep background still on scroll */
+            font-family: 'Segoe UI', sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+
+        .form-card {
+            background: #ffffffd8;
+            padding: 42px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        .form-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: white;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .btn-update {
+            background-color: #007bff;
+        }
+
+        .btn-update:hover {
+            background-color: #0069d9;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        table {
+            width: 100%;
+            max-width: 900px;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+            text-transform: capitalize;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-btns button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            font-size: 13px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+        }
+
+        .btn-clear {
+            background-color: #dcc635;
+        }
+        .btn-delete {
+            background-color: #c82333;
+        }
+        .btn-save {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+<div class="form-card">
+    <h2>Event Management</h2>
+    <form id="eventForm">
+        <div class="form-group">
+            <label for="eventId">Event ID</label>
+            <input id="eventId" name="eventId" required type="text">
+        </div>
+        <div class="form-group">
+            <label for="eventName">Name</label>
+            <input id="eventName" name="eventName" required type="text">
+        </div>
+        <div class="form-group">
+            <label for="eventDescription">Description</label>
+            <input id="eventDescription" name="eventDescription" required type="text">
+        </div>
+        <div class="form-group">
+            <label for="eventDate">Date</label>
+            <input id="eventDate" name="eventDate" required type="date">
+        </div>
+        <div class="form-group">
+            <label for="eventPlace">Place</label>
+            <input id="eventPlace" name="eventPlace" required type="text">
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-save" type="submit" id="btnclick">Save</button>
+            <button class="btn btn-update" type="button">Update</button>
+            <button class="btn btn-clear" type="reset">Clear</button>
+            <button class="btn btn-delete" type="button">Delete</button>
+        </div>
+    </form>
+</div>
+
+<table id="etable">
+    <thead>
+    <tr>
+        <th>e id</th>
+        <th>name</th>
+        <th>description</th>
+        <th>date</th>
+        <th>place</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+    $('#btnclick').click(function () {
+        $.ajax({
+            url: "http://localhost:8080/Test_Web_exploded/hello",
+            method: "GET",
+            success: function (result) {
+                const tbody = $('#etable tbody');
+                tbody.empty();
+
+                result.forEach(function (item) {
+                    tbody.append(
+                        '<tr>' +
+                        '<td>' + item.eid + '</td>' +
+                        '<td>' + item.ename + '</td>' +
+                        '<td>' + item.edescription + '</td>' +
+                        '<td>' + item.edate + '</td>' +
+                        '<td>' + item.eplace + '</td>' +
+
+                        '</tr>'
+                    );
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+</script>
+
+
+<!--<script>-->
+<!--    $(document).ready(function () {-->
+<!--        $("#ajax-btn").click(function () {-->
+<!--            $.ajax({-->
+<!--                method: 'GET',-->
+<!--                url: 'database.json',-->
+<!--                success: function (result) {-->
+<!--                    const tobody = $('#table tbody');-->
+<!--                    tobody.empty();-->
+
+<!--                    if (Array.isArray(result)) {-->
+<!--                        result.forEach(function (item) {-->
+<!--                            tobody.append('<tr>'-->
+<!--                                + '<td>' + item.userId + '</td>'-->
+<!--                                + '<td>' + item.id + '</td>'-->
+<!--                                + '<td>' + item.title + '</td>'-->
+<!--                                + '<td>' + item.body + '</td>'-->
+<!--                                + '</tr>'-->
+<!--                            );-->
+<!--                        })-->
+<!--                    }-->
+<!--                },-->
+<!--                error: function (xhr, status, error) {-->
+<!--                    console.log(error);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+
+</body>
+</html>
