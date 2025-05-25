@@ -152,9 +152,11 @@
         .btn-clear {
             background-color: #dcc635;
         }
+
         .btn-delete {
             background-color: #c82333;
         }
+
         .btn-save {
             background-color: #28a745;
         }
@@ -185,10 +187,10 @@
             <input id="eventPlace" name="eventPlace" required type="text">
         </div>
         <div class="btn-group">
-            <button class="btn btn-save" type="submit" id="btnclick">Save</button>
-            <button class="btn btn-update" type="button">Update</button>
-            <button class="btn btn-clear" type="reset">Clear</button>
-            <button class="btn btn-delete" type="button">Delete</button>
+            <button class="btn btn-save" id="save-btn" type="submit">Save</button>
+            <button class="btn btn-update" id="update-btn" type="button">Update</button>
+            <button class="btn btn-clear" id="clear-btn" type="reset">Clear</button>
+            <button class="btn btn-delete" id="delete-btn" type="button">Delete</button>
         </div>
     </form>
 </div>
@@ -208,7 +210,11 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 <script>
-    $('#btnclick').click(function () {
+    $(document).ready(function () {
+        loadevents();
+    });
+
+    function loadevents() {
         $.ajax({
             url: "http://localhost:8080/Test_Web_exploded/hello",
             method: "GET",
@@ -233,41 +239,41 @@
                 console.log(error);
             }
         });
+    }
+
+    $('#save-btn').click(function (e) {
+        e.preventDefault();
+        var eventId = $('#eventId').val();
+        var eventName = $('#eventName').val();
+        var eventDescription = $('#eventDescription').val();
+        var eventDate = $('#eventDate').val();
+        var eventPlace = $('#eventPlace').val();
+
+        var eventData = {
+            eid: eventId,
+            ename: eventName,
+            edescription: eventDescription,
+            edate: eventDate,
+            eplace: eventPlace
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/Test_Web_exploded/hello",
+            method: "POST",
+            contentType: "application/json",
+            //js object convert to json object
+            data: JSON.stringify(eventData),
+            success: function (res) {
+                alert(res.message);
+                loadevents();
+            },
+            error: function (err) {
+                alert(err.message);
+                console.log(err);
+            }
+        });
     });
 
 </script>
-
-
-<!--<script>-->
-<!--    $(document).ready(function () {-->
-<!--        $("#ajax-btn").click(function () {-->
-<!--            $.ajax({-->
-<!--                method: 'GET',-->
-<!--                url: 'database.json',-->
-<!--                success: function (result) {-->
-<!--                    const tobody = $('#table tbody');-->
-<!--                    tobody.empty();-->
-
-<!--                    if (Array.isArray(result)) {-->
-<!--                        result.forEach(function (item) {-->
-<!--                            tobody.append('<tr>'-->
-<!--                                + '<td>' + item.userId + '</td>'-->
-<!--                                + '<td>' + item.id + '</td>'-->
-<!--                                + '<td>' + item.title + '</td>'-->
-<!--                                + '<td>' + item.body + '</td>'-->
-<!--                                + '</tr>'-->
-<!--                            );-->
-<!--                        })-->
-<!--                    }-->
-<!--                },-->
-<!--                error: function (xhr, status, error) {-->
-<!--                    console.log(error);-->
-<!--                }-->
-<!--            });-->
-<!--        });-->
-<!--    });-->
-<!--</script>-->
-
-
 </body>
 </html>
