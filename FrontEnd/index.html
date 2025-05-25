@@ -7,10 +7,10 @@
     <style>
         body {
             background-image: url('/images/paper-surrounded-finance-element.jpg');
-            background-size: cover; /* Scale image to cover full screen */
-            background-position: center; /* Center the image */
-            background-repeat: no-repeat; /* Prevent repeating */
-            background-attachment: fixed; /* Keep background still on scroll */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
             font-family: 'Segoe UI', sans-serif;
             padding: 20px;
             display: flex;
@@ -213,7 +213,7 @@
     $(document).ready(function () {
         loadevents();
 
-        $('#etable tbody').on('click','tr',function (){
+        $('#etable tbody').on('click', 'tr', function () {
             //select karapu table row eke tiyena table details tika select karanawa
             const tds = $(this).find('td');
             $('#eventId').val(tds.eq(0).text());
@@ -276,6 +276,69 @@
             success: function (res) {
                 alert(res.message);
                 loadevents();
+            },
+            error: function (err) {
+                alert(err.message);
+                console.log(err);
+            }
+        });
+    });
+
+    $('#update-btn').click(function (e) {
+        e.preventDefault();
+        var eventId = $('#eventId').val();
+        var eventName = $('#eventName').val();
+        var eventDescription = $('#eventDescription').val();
+        var eventDate = $('#eventDate').val();
+        var eventPlace = $('#eventPlace').val();
+
+        var updatedEventData = {
+            eid: eventId,
+            ename: eventName,
+            edescription: eventDescription,
+            edate: eventDate,
+            eplace: eventPlace
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/Test_Web_exploded/hello",
+            method: "PUT",
+            contentType: "application/json",
+            //js object convert to json object
+            data: JSON.stringify(updatedEventData),
+            success: function (res) {
+                alert(res.message);
+                loadevents();
+            },
+            error: function (err) {
+                alert(err.message);
+                console.log(err);
+            }
+        });
+    });
+
+    $('#delete-btn').click(function () {
+        var eventId = $('#eventId').val();
+
+        if (!eventId) {
+            alert("Please select an event to delete.");
+            return;
+        }
+
+        var eventData = {
+            eid: eventId
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/Test_Web_exploded/hello",
+            method: "DELETE",
+            contentType: "application/json",
+            //js object convert to json object
+            data: JSON.stringify(eventData),
+            success: function (res) {
+                alert(res.message);
+                loadevents();
+                $('#eventForm')[0].reset();
             },
             error: function (err) {
                 alert(err.message);
